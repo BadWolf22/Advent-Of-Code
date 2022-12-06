@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "command": "cd ${workspaceFolder}/${relativeFileDirname}; nodemon --ext js,txt index.js",
+            "name": "Run Current File",
+            "request": "launch",
+            "type": "f5anything"
+        }
+    ]
+}
