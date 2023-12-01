@@ -78,6 +78,7 @@ function part2(width) {
     let grid = {};
     let pos;
     let dirs = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+    let diags = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
     let chars = ">V<^";
     let widths = [];
     let facing = 0;
@@ -151,51 +152,126 @@ function part2(width) {
     shape.unshift([0,0,0,0,0,0]);
     shape.push([0,0,0,0,0,0]);
 
-    let rom = "i";
-
-    for (let n = 0; n < 2; n++) {
-        for (let row in shape) {
-            for (let col in shape[row]) {
+    let tolabel = [];
+    for (let y = 0; y < shape.length; y++) {
+        for (let x = 0; x < shape[y].length; x++) {
+            if (shape[y][x] == 0) {
                 let adj = 0;
-                let first, second;
                 for (let i = 0; i < 4; i++) {
-                    let coord = [col, row].map(e=>parseInt(e));
-                    coord[0] += dirs[i][0];
-                    coord[1] += dirs[i][1];
-                    if (shape[coord[1]] != undefined && shape[coord[1]][coord[0]] != undefined) {
-                        if (shape[coord[1]][coord[0]] != 0) {
-                            if (shape[row][col] == 0) {
-                                adj++;
-                                if (first == undefined) {
-                                    first = [shape[coord[1]][coord[0]], i];
-                                } else if (second == undefined) {
-                                    second = [shape[coord[1]][coord[0]], i];
-                                }
-                            } else {
-                                cube[shape[row][col]][i] = [shape[coord[1]][coord[0]], i];
-                            }
-                        }
-                    }
+                    let dx = x + dirs[i][0];
+                    let dy = y + dirs[i][1];
+
+                    if (shape[dy] == undefined) continue;
+                    if (shape[dy][dx] == undefined) continue;
+
+                    if (shape[dy][dx] != 0) adj++;
                 }
                 if (adj == 2) {
-                    // This means we are on a blank spot with 2 adjacent sides (case I)
-                    shape[row][col] = rom;
-                    // console.log(first, second)
-                    // cube[first[0]][(first[1]+2)%4] = [second[0], second[1]];
-                    // cube[second[0]][(second[1]+2)%4] = [first[0], first[1]];
-                    
-                    // let adj = 0;
-                    // for (let i = 0; i < 4; i++) {
-                    //     let coord = [col, row].map(e=>parseInt(e));
-                    //     coord[0] += dirs[i][0];
-                    //     coord[1] += dirs[i][1];
-
-                    // }
+                    shape[y][x] = "i";
+                    tolabel.push([x,y]);
                 }
             }
         }
-        rom += "i";
     }
+    for (let labeling of tolabel) {
+        label(labeling);
+    }
+        
+    function label(first = undefined, second=undefined, name="i") {
+        let ii = [];
+        let allDirs = [dirs, diags];
+        if (second == undefined) {
+            for (let n = 0; n < 2; n++) {
+                for (let i = 0; i < 4; i++) {
+                    let dx = first[0] + allDirs[n][i][0];
+                    let dy = first[1] + allDirs[n][i][1];
+
+                    if (shape[dy] == undefined) continue;
+                    if (shape[dy][dx] == undefined) continue;
+                    if ([1,2,3,4,5,6].includes(shape[dy][dx])) continue;
+                    
+                    let adj = 0;
+                    for (let j = 0; j < 4; j++) {
+                        let dx1 = dx + allDirs[0][j][0];
+                        let dy1 = dy + allDirs[0][j][1];
+                        if (shape[dy1] == undefined) continue;
+                        if (shape[dy1][dx1] == undefined) continue;
+                        if ([1,2,3,4,5,6].includes(shape[dy1][dx1])) {
+                            adj++;
+                        }
+                    }
+                    if (adj == 1) {
+                        ii.push([dx, dy]);
+                        break;
+                    }
+                }
+            }
+        } else {
+            let coords = [first, second];
+            let chosen;
+            for (let coord in coords) {
+                for (let i = 0; i < 4; i++) {
+                    let dx = coords[coord][0] + dirs[i][0];
+                    let dy = coords[coord][1] + dirs[i][1];
+
+                    if (shape[dy] == undefined) continue;
+                    if (shape[dy][dx] == undefined) continue;
+                    if (shape[dy][dx] != 0) continue;
+                    if ([1,2,3,4,5,6].includes(shape[dy][dx])) continue;
+                    
+                    let adj = 0;
+                    for (let j = 0; j < 4; j++) {
+                        let dx1 = dx + allDirs[0][j][0];
+                        let dy1 = dy + allDirs[0][j][1];
+                        if (shape[dy1] == undefined) continue;
+                        if (shape[dy1][dx1] == undefined) continue;
+                        if ([1,2,3,4,5,6].includes(shape[dy1][dx1])) {
+                            adj++;
+                        }
+                    }
+                    if (adj == 1) {
+                        ii.push([dx, dy]);
+                        chosen = coord == "1" ? 0 : 1;
+                        break;
+                    }
+                }
+                if (chosen != undefined) break;
+            }
+            if (chosen == undefined) return;
+            for (let i = 0; i < 4; i++) {
+                let dx = coords[chosen][0] + diags[i][0];
+                let dy = coords[chosen][1] + diags[i][1];
+
+                if (shape[dy] == undefined) continue;
+                if (shape[dy][dx] == undefined) continue;
+                if (shape[dy][dx] != 0) continue;
+
+
+                if ([1,2,3,4,5,6].includes(shape[dy][dx])) continue;
+                
+                let adj = 0;
+                for (let j = 0; j < 4; j++) {
+                    let dx1 = dx + dirs[j][0];
+                    let dy1 = dy + dirs[j][1];
+                    if (shape[dy1] == undefined) continue;
+                    if (shape[dy1][dx1] == undefined) continue;
+                    if ([1,2,3,4,5,6].includes(shape[dy1][dx1])) {
+                        adj++;
+                    }
+                }
+                if (adj == 1) {
+                    ii.push([dx, dy]);
+                    break;
+                }
+            }
+        }
+        if (ii.length == 2) {
+            shape[ii[0][1]][ii[0][0]] = name+"i";
+            shape[ii[1][1]][ii[1][0]] = name+"i";
+            label(ii[0], ii[1], name+"i");
+        }
+    }
+    
 
     return shape;
     // return 1000 * (pos[1]+1) + 4 * (pos[0]+1) + facing;
