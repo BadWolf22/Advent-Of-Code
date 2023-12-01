@@ -5,7 +5,7 @@ let input;
 
 function formatFile() {
     input = fs.readFileSync("input.txt", { encoding: 'utf8', flag: 'r' });
-    input = input.replaceAll("\r","").split("\n");
+    input = input.replaceAll("\r", "").split("\n");
 }
 
 function part1() {
@@ -20,7 +20,7 @@ function part1() {
             }
         }
         if (second == undefined) second = first;
-        sum += parseInt(first+second);
+        sum += parseInt(first + second);
     }
     return sum;
 }
@@ -36,23 +36,23 @@ function part2() {
             for (let match of indices) {
                 index = match.index;
                 if (index > -1) {
-                let temp;
-                // console.log(num % 10);
-                if (first == undefined || first[1] > index) {
-                    temp = first;
-                    first = [num%10, index];
-                    if (temp && (second == undefined || second[1] < temp[1])) {
-                        second = temp;
-                    }
-                } else if (second == undefined || second[1] < index) {
-                    temp = second;
-                    second = [num%10, index];
-                    if (temp && (first == undefined || first[1] > temp[1])) {
-                        first = temp;
+                    let temp;
+                    // console.log(num % 10);
+                    if (first == undefined || first[1] > index) {
+                        temp = first;
+                        first = [num % 10, index];
+                        if (temp && (second == undefined || second[1] < temp[1])) {
+                            second = temp;
+                        }
+                    } else if (second == undefined || second[1] < index) {
+                        temp = second;
+                        second = [num % 10, index];
+                        if (temp && (first == undefined || first[1] > temp[1])) {
+                            first = temp;
+                        }
                     }
                 }
             }
-        }
         }
         if (second == undefined) second = first;
         let cal = first[0].toString() + second[0].toString();
