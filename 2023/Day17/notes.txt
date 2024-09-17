@@ -1,0 +1,25 @@
+val  1 |val  2 |val  3 |val  1 |val  2 |
+hmin   |hmin   |hmin   |hmin   |hmin   |
+vmin 14|vmin 14|vmin 12|vmin 8 |vmin   |
+----------------------------------------
+val  1 |val  3 |val  2 |val  1 |val  3 |
+hmin 13|hmin 12|hmin 9 |hmin 9 |hmin   |
+vmin 13|vmin 13|vmin 9 |vmin 7 |vmin 8 |
+----------------------------------------
+val  2 |val  3 |val  1 |val  2 |val  3 |
+hmin 12|hmin 10|hmin 7 |hmin 7 |hmin   |
+vmin 12|vmin 11|vmin 8 |vmin 6 |vmin 5 |
+----------------------------------------
+val  2 |val  1 |val  3 |val  2 |val  1 |
+hmin 10|hmin 8 |hmin 7 |hmin 4 |hmin 7 |
+vmin   |vmin 8 |vmin 9 |vmin 6 |vmin 2 |
+----------------------------------------
+val  3 |val  1 |val  2 |val  3 |val  1 |
+hmin 12|hmin 7 |hmin 6 |hmin 4 |hmin 1 |
+vmin 13|vmin 9 |vmin 9 |vmin 7 |vmin 1 |
+----------------------------------------
+
+
+// curr_n means current offset by +- n
+curr.hmin = min of (curr.val+cur_1.vmin, curr.val+cur_1.val+cur_2.vmin, curr.val+curr_1.val+curr_2.val+curr_3.vmin)
+curr.vmin = same but with hmin
