@@ -7,10 +7,12 @@
             "type": "f5anything"
         },
         {
-            "command": "cd ${workspaceFolder}/${relativeFileDirname}; nodemon --ext js,txt index.js",
+            // "command": "cd ${workspaceFolder}/${relativeFileDirname}; nodemon --ext js,txt index.js",
             "name": "Debug Current File",
-            "request": "launch",
-            "type": "node-terminal"
+            "request": "attach",
+            "type": "node",
+            "restart": true,
+            "port": 9229
         }
     ]
 }
