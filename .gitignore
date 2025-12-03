@@ -11,6 +11,10 @@ coverage/
 dist/
 build/
 
+# C#
+bin/
+obj/
+
 # Environment variables
 .env
 .env.local
